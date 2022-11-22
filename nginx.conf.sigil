@@ -48,7 +48,7 @@ server {
     }
 
     resolver 8.8.8.8;
-    proxy_set_header Host {{ var "S3_HOSTNAME" }};
+    proxy_set_header Host {{ var "S3_BACKEND" }};
     proxy_set_header Connection '';
     proxy_set_header Authorization '';
     proxy_hide_header Set-Cookie;
@@ -62,7 +62,7 @@ server {
     proxy_hide_header x-amz-bucket-region;
     proxy_hide_header x-amzn-requestid;
     proxy_ignore_headers Set-Cookie;
-    proxy_pass $s3_backend$uri;
+    proxy_pass https://$s3_backend$uri;
     proxy_intercept_errors off;
 
     proxy_cache CACHE;
