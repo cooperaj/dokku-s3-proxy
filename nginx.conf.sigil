@@ -61,6 +61,7 @@ server {
     proxy_hide_header x-amz-server-side-encryption;
     proxy_hide_header x-amz-bucket-region;
     proxy_hide_header x-amzn-requestid;
+    proxy_hide_header x-amz-meta-s3cmd-attrs;
     proxy_ignore_headers Set-Cookie;
     proxy_pass https://$s3_backend$uri;
     proxy_intercept_errors off;
