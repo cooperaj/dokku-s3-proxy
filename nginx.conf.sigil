@@ -28,9 +28,13 @@ server {
   access_log  {{ $.NGINX_ACCESS_LOG_PATH }}{{ if and ($.NGINX_ACCESS_LOG_FORMAT) (ne $.NGINX_ACCESS_LOG_PATH "off") }} {{ $.NGINX_ACCESS_LOG_FORMAT }}{{ end }};
   error_log   {{ $.NGINX_ERROR_LOG_PATH }};
 
-  keepalive_timeout 30;
+  ssl_certificate           {{ $.APP_SSL_PATH }}/server.crt;
+  ssl_certificate_key       {{ $.APP_SSL_PATH }}/server.key;
+  ssl_protocols             TLSv1.2 {{ if eq $.TLS13_SUPPORTED "true" }}TLSv1.3{{ end }};
+  ssl_prefer_server_ciphers off;
 
-  include {{ $.DOKKU_ROOT }}/{{ $.APP }}/nginx.conf.d/*.conf;
+  keepalive_timeout 30;
+  {{ if and (eq $.SPDY_SUPPORTED "true") (ne $.HTTP2_SUPPORTED "true") }}add_header          Alternate-Protocol  {{ $.PROXY_SSL_PORT }}:npn-spdy/2;{{ end }}
 
   location = / {
     index index.html;
@@ -76,6 +80,8 @@ server {
     add_header 'Access-Control-Allow-Origin' '*';
     add_header X-Cache-Status $upstream_cache_status;
   }
+  
+  include {{ $.DOKKU_ROOT }}/{{ $.APP }}/nginx.conf.d/*.conf;
 }
 {{ end }}
 {{ end }}
