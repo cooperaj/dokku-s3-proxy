@@ -50,23 +50,23 @@ dokku config:set S3_BACKEND=${YOUR_S3_BACKEND}
 
 ## Running it!
 
-Finally, the moment you’ve been waiting for. Assuming you’ve entered all the above configuration correctly you can now push the project and watch it appear on the internet.
+You can now push the project and watch it appear on the internet.
 
 ```bash
 git push dokku
 ```
 
+If all goes well you should see your project build and deploy and finally be presented with a successful deployment message with your URL. You'll then be able to access the bucket contents as if they lived at that url (and not in object storage).
+
 ## Final configuration
 
-Some configuration options can only take effect once the app is running pushed, in this case turning on LetEncrypt SSL support.
+Some configuration options can only take effect once the app is running/pushed, in this case turning on LetEncrypt SSL support.
 
 ```bash
 # Enable LetsEncrypt
 # If it's your first time you may be prompted to set the administrator email
 dokku letsencrypt:enable
 ```
-
-If all goes well you should see your project build and deploy and finally be presented with a successful deployment message with your URL. You'll then be able to access the bucket contents as if they lived at that url (and not in object storage).
 
 ## Mastodon Migration
 
@@ -126,7 +126,7 @@ S3_HOSTNAME=${YOUR_BUCKET_HOSTNAME}\
 S3_ALIAS_HOST=${YOUR_DOMAIN}
 ```
 
-Login to your instance once it comes back up (this can take a while due to init scripts within the LinuxServer.io container) and check that everything appears to be working. Inspect the image urls to see if they're now pointing at `${YOUR_DOMAIN}`. You might find that recent posts/users do not have images which is normal (read on), but if you're missing older media something has not gone right. You'll need to start delving in the logs now to see whats going on.
+Login to your instance once it comes back up (this can take a while due to init scripts within the LinuxServer.io container) and check that everything appears to be working. Inspect the image urls to see if they're now pointing at `${YOUR_DOMAIN}`. You might find that recent posts/users do not have images which is normal (read on), but if you're missing older media something has not gone right. You'll need to start delving in the logs now to see whats going on. `dokku nginx:access-logs` and `dokku nginx:error-logs` are your friend.
 
 Assuming you're good we need to finally ensure that any cache files that were created in the time between the start of the first sync, and the running of the above configuration changes will need copying across. There's no easy way to do this except to run the same sync command again. Just like the first time it'll take a while.
 
